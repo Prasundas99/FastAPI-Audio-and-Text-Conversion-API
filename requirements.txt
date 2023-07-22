@@ -5,5 +5,5 @@ gTTS==2.3.2
 psutil==5.9.5
 pydantic==1.9.2
 python-dotenv==1.0.0
-starlette==0.19.1
+starlette==0.27.0
 uvicorn==0.17.6
