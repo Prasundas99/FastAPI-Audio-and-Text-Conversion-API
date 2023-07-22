@@ -1,5 +1,6 @@
 import assemblyai as aai
 from gtts import gTTS
+from cloud import fileUpload
 
 def audioToText(audioUrl):
     aai.settings.api_key = "21008ed8ba434b078f262fec17016cd1"
@@ -32,5 +33,7 @@ def textToAudio(inputText):
     
     ## extract the saved mp3 file to save it in the database
     file = open("welcome.mp3", "rb")
-
+    uploadedFile = fileUpload(file)
+    print(uploadedFile)
+    file.close()
     return file

@@ -2,3 +2,5 @@ fastapi~=0.78.0
 uvicorn~=0.17.6
 gunicorn==20.1.0
 assemblyai==0.15.0
+cloudinary==1.33.0
+gtts==2.3.2
