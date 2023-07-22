@@ -1,11 +1,11 @@
 import assemblyai as aai
 from gtts import gTTS
-
+from config.globals import AAI_API_KEY
 from services.cloudService import fileUploadService
 
 
 def audioToText(audioUrl):
-    aai.settings.api_key = "21008ed8ba434b078f262fec17016cd1"
+    aai.settings.api_key = AAI_API_KEY
     transcriber = aai.Transcriber()
     try:
         print("Transcribing...")

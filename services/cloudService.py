@@ -1,7 +1,8 @@
 from cloudinary import config, uploader
+from config.globals import CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME
 
 def fileUploadService(file):
-    config(cloud_name="dwnurvsv4", api_key="426177162755758", api_secret="vqOVz0gTC2lvTefhwAI2-ETMt-k")
+    config(cloud_name=CLOUDINARY_CLOUD_NAME, api_key=CLOUDINARY_API_KEY, api_secret=CLOUDINARY_API_SECRET)
     
     upload_result = None
     if file:
