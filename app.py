@@ -1,29 +1,26 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from fastapi.responses import JSONResponse
 from datetime import datetime
+import psutil
+
+from middlewares.errorException import custom_exception_handler
 
 from models.fileUpload import FileUploadRequestSchema, FileUploadResponseSchema
 from models.speechToText import SpeechToTextRequestSchema, SpeechToTextResponseSchema
 from models.textToSpeech import TextToSpeechRequestSchema, TextToSpeechResponseSchema
+
 from services.cloudService import fileUploadService
+from services.health import get_ram_available_mb
 from services.soundAndText import audioToText, textToAudio
 
-from utils.responseSchema import successResponse, errorResponse
+from utils.responseSchema import errorResponse, successResponse
 
 app = FastAPI()
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request, exc):
-    return JSONResponse(exc.detail, status_code=exc.status_code)
-
-
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request, exc):
-    return JSONResponse(exc, status_code=status.HTTP_400_BAD_REQUEST)
-
+   return custom_exception_handler(request, exc)
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,7 +41,7 @@ async def fileUpload(request: FileUploadRequestSchema):
     return {"url": fileUploadService(request.file)}
     
 @app.post('/speech-to-text', response_model=SpeechToTextResponseSchema)
-async def speechToText(request: SpeechToTextRequestSchema):
+async def speechToTextFree(request: SpeechToTextRequestSchema):
     return successResponse("Success",{"text": audioToText(request.audio_url)})
 
 @app.post('/text-to-speech', response_model=TextToSpeechResponseSchema)
@@ -52,4 +49,18 @@ async def textToSpeech(request: TextToSpeechRequestSchema):
     fileUrl = textToAudio(request.text)
     return successResponse("Success",{"url": fileUrl})
 
+@app.get('/health')
+def health_check():
+    """Health check endpoint."""
+    cpu_percent = psutil.cpu_percent()
+    ram_available_mb = get_ram_available_mb()
+
+    if app.state:
+        return successResponse("Success",{
+            "status": "UP",
+            "cpu_percent": cpu_percent,
+            "ram_available": ram_available_mb
+        })
+    else:
+        return errorResponse("Error",{"status": "DOWN"})
 

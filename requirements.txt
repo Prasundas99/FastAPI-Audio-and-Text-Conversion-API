@@ -5,3 +5,4 @@ assemblyai==0.15.0
 cloudinary==1.33.0
 gtts==2.3.2
 pydantic[email,dotenv]~=1.9.0
+psutil == 5.9.5
