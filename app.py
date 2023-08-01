@@ -34,7 +34,7 @@ deployedTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 @app.get('/')
 async def index():
-    successResponse("Welcome to FastAPI", {"deployedTime": deployedTime})
+   return successResponse("Welcome to FastAPI", {"deployedTime": deployedTime})
 
 @app.post('/file-upload', response_model=FileUploadResponseSchema)
 async def fileUpload(request: FileUploadRequestSchema):
